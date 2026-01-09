@@ -1,4 +1,5 @@
-import { generateShape, SHAPE_COLORS } from "./shapes.js";
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js';
+import { generateShape, SHAPE_COLORS } from './shapes.js';
 
 export class ParticleSystem {
   constructor(scene, count = 15000) {
@@ -26,9 +27,7 @@ export class ParticleSystem {
 
   setShape(type) {
     this.targetPositions = generateShape(type, this.count);
-    if (SHAPE_COLORS[type]) {
-      this.material.color.setHex(SHAPE_COLORS[type]);
-    }
+    if (SHAPE_COLORS[type]) this.material.color.setHex(SHAPE_COLORS[type]);
     this.currentShape = type;
   }
 
@@ -36,14 +35,12 @@ export class ParticleSystem {
     const index = hand[8];
     const thumb = hand[4];
 
-    // Mirror X axis for natural hand movement
     const x = -(index.x - 0.5) * 10;
     const y = -(index.y - 0.5) * 6;
     const z = (thumb.x - index.x) * 8;
 
     this.points.position.lerp(new THREE.Vector3(x, y, z), 0.1);
 
-    // Pinch → scale
     const pinchDist = Math.hypot(index.x - thumb.x, index.y - thumb.y);
     this.points.scale.setScalar(1 + pinchDist * 4);
   }
